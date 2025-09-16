@@ -16,7 +16,7 @@ export const auth = betterAuth({
                     discoveryUrl: `https://${import.meta.env.AUTH0_DOMAIN_URL}/.well-known/openid-configuration`,
                     scopes: ["openid", "profile", "email"],
                     accessType: 'offline',
-                    pkce: false,
+                    pkce: true,
                     authorizationUrl: `https://${import.meta.env.AUTH0_DOMAIN_URL}/auth`,
                     tokenUrl: `https://${import.meta.env.AUTH0_DOMAIN_URL}/token`,
                     userInfoUrl: `https://${import.meta.env.AUTH0_DOMAIN_URL}/me`,
