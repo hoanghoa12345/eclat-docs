@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <div class="w-full h-screen flex justify-center items-center">
+    <button class="btn" id="login">
+      <span id="loading" class="loading loading-spinner" style="display:none"></span>
+      Sign In with HoaDev
+    </button>
+  </div>
+  <script>
+    const { signIn } = await import("../lib/auth-client");
+
+    const loginElement: HTMLElement | null = document.querySelector("#login");
+    loginElement!.onclick = () => {
+      const loadingElement = document.getElementById("loading");
+      if (loadingElement) loadingElement.style.display = "block";
+      signIn.oauth2({
+        providerId: "auth0",
+        callbackURL: "/document",
+        // errorCallbackURL: "/error-page",
+        disableRedirect: false,
+      });
+    };
+  </script>
+</Layout>

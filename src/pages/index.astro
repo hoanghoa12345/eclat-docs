@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { auth } from "../lib/auth";
+
+export const prerender = false;
+
+const session = await auth.api.getSession({
+	headers: Astro.request.headers,
+});
+
+// If the user is not logged in, redirect them to the login page
+if (!session?.session.id && !Astro.url.pathname.startsWith("/login")) {
+	return Astro.redirect("/login");
+} else {
+	return Astro.redirect("/document");
+}
+---
+
+<Layout>
+</Layout>

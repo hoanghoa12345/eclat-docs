@@ -1,0 +1,28 @@
+---
+import type { document as doc } from "@/db/schema";
+import Navbar from "./Navbar.tsx";
+import type { User } from "better-auth";
+import { Editor } from "./Editor";
+
+type Document = typeof doc.$inferSelect;
+
+interface Props {
+    document: Document;
+    template?: string;
+    user?: User;
+}
+
+const { user, document } = Astro.props;
+---
+
+<div class="min-h-screen bg-editor-bg">
+    <div
+        class="flex flex-col px-4 pt-2 gap-y-2 fixed top-0 left-0 right-0 z-10 bg-[#FAFBFD] print:hidden h-[112px]"
+    >
+        <Navbar user={user!} data={document} client:only="react" />
+        <!-- <Toolbar /> -->
+    </div>
+    <div class="pt-[114px] print:pt-0">
+        <Editor initialContent={document.content} client:only="react"/>
+      </div>
+</div>

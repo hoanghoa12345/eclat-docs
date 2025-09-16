@@ -1,0 +1,21 @@
+---
+import { Image } from "astro:assets";
+import logo from "../../assets/logo.svg";
+import SearchInput from "./SearchInput.astro";
+import UserButton from "./UserButton.tsx";
+
+const { user } = Astro.props;
+---
+
+<nav class="flex items-center justify-between h-full w-full bg-base-100">
+    <div class="flex gap-3 items-center shrink-0 pr-6">
+        <a href="/">
+            <Image src={logo} alt="Logo" width={36} height={36} />
+        </a>
+        <h3 class="text-xl">Docs</h3>
+    </div>
+    <SearchInput />
+    <div class="flex gap-3 items-center pl-6">
+        <UserButton user={user} client:load />
+    </div>
+</nav>

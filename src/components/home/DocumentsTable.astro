@@ -1,0 +1,69 @@
+---
+import DocumentRow from "./DocumentRow.astro";
+import RenameDialog from '../ui/RenameDialog.astro'
+import RemoveDialog from '../ui/RemoveDialog.astro'
+import type { document as doc } from "@/db/schema";
+
+type Document = typeof doc.$inferSelect;
+
+interface Props {
+    documents: Document[];
+    status: string
+}
+
+const { documents, status } = Astro.props;
+---
+
+<div class="max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
+  {
+    documents === undefined ? (
+      <div class="flex justify-center items-center h-24">
+        <span class="loading loading-spinner loading-xl" />
+      </div>
+    ) : (
+      <table>
+        <thead>
+          <tr>
+            <th />
+            <th>&nbsp;</th>
+            <th class="hidden md:table-cell text-left">Shared</th>
+            <th class="hidden md:table-cell text-left">Created at</th>
+          </tr>
+        </thead>
+        {documents.length === 0 ? (
+          <tbody>
+            <tr class="hover:bg-transparent">
+              <td colspan={4} class="h-24 text-muted-foreground text-center">
+                No documents found
+              </td>
+            </tr>
+          </tbody>
+        ) : (
+          <tbody>
+            {documents.map((document) => (
+              <DocumentRow document={document} />
+            ))}
+          </tbody>
+        )}
+      </table>
+    )
+  }
+  <div class="flex items-center justify-center">
+    <button class="btn">
+      {status === "CanLoadMore" ? "Load more" : "End of results"}
+    </button>
+  </div>
+  <RenameDialog />
+  <RemoveDialog />
+</div>
+<script>
+  import { navigate } from "astro:transitions/client";
+
+  const documentRowElements = document.querySelectorAll(".document-row");
+  documentRowElements.forEach((documentRowElement) => {
+    documentRowElement.addEventListener("click", (event) => {
+      const href = `/document/${(event.target as HTMLElement).dataset.id}`;
+      navigate(href);
+    });
+  });
+</script>

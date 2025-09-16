@@ -1,0 +1,35 @@
+<dialog id="remove_document_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold">Are you sure?</h3>
+        <p class="py-4">
+            This action cannot be undone. This will permamently delete your
+            document.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Cancel</button>
+            </form>
+        </div>
+        <button class="btn btn-error">Delete</button>
+    </div>
+</dialog>
+<script>
+    import Toastify from "toastify-js";
+
+    const removeDocument = () => {
+        Toastify({
+            text: "This is a toast",
+            duration: 3000,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right",
+            style: {
+                background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            },
+        }).showToast();
+        document.getElementById("remove_document_modal").close();
+    };
+    document
+        .querySelector(".btn-error")
+        ?.addEventListener("click", removeDocument);
+</script>

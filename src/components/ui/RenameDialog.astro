@@ -1,0 +1,21 @@
+<dialog id="rename_document_modal" class="modal">
+    <div class="modal-box">
+        <form method="dialog">
+            <button
+                class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                >✕</button
+            >
+        </form>
+        <h3 class="text-lg font-bold">Rename document</h3>
+        <form>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend"
+                    >Enter a new name for this document</legend
+                >
+                <input type="text" class="input w-full" placeholder="Title" />
+            </fieldset>
+            <button class="btn" type="reset" onclick="rename_document_modal.close()">Cancel</button>
+            <button class="btn" type="submit">Save</button>
+        </form>
+    </div>
+</dialog>

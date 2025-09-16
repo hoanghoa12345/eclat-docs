@@ -1,0 +1,38 @@
+---
+import { auth } from "../lib/auth"; // import your Better Auth instance
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/home/Navbar.astro";
+import TemplatesGallery from "../components/home/TemplatesGallery.astro";
+import DocumentsTable from "../components/home/DocumentsTable.astro";
+import { db } from "@/db/drizzle";
+
+export const prerender = false; // Not needed in 'server' mode
+
+const session = await auth.api.getSession({
+  headers: Astro.request.headers,
+});
+
+const templates = await db.query.template.findMany();
+
+const status = "CanLoadMore";
+const documents = await db.query.document.findMany({
+  where: (documents, { and, eq, isNull }) =>
+  and(eq(documents.userId, session?.user.id!), isNull(documents.deletedAt)),
+  orderBy: (documents, { desc }) => [desc(documents.updatedAt)],
+  limit: 5,
+  offset: 0,
+});
+
+---
+
+<Layout>
+  <div class="min-h-screen flex flex-col">
+    <div class="fixed top-0 left-0 right-0 z-10 h-16 p-4">
+      <Navbar user={session?.user} />
+    </div>
+    <div class="mt-16">
+      <TemplatesGallery templates={templates} />
+      <DocumentsTable documents={documents} status={status}/>
+    </div>
+  </div>
+</Layout>

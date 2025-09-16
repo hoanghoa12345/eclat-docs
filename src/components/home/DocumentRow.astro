@@ -1,0 +1,42 @@
+---
+import { format } from "date-fns";
+import DocumentIcon from "../../assets/document.svg";
+import Building2Icon from "../../assets/building.svg";
+import CircleUserIcon from "../../assets/circle-user.svg";
+import DocumentMenu from './DocumentMenu.astro'
+import type { document as doc } from "@/db/schema";
+
+type Document = typeof doc.$inferSelect;
+
+interface Props {
+    document: Document;
+}
+
+const { document } = Astro.props;
+---
+
+<tr class="cursor-pointer">
+  <td class="w-[50px] py-2">
+    <DocumentIcon class="size-6 fill-blue-500" />
+  </td>
+  <td class="font-medium md:w-[45%] document-row" data-id={document.id}>{document.title}</td>
+  <td class="text-muted-foreground hidden md:flex items-center gap-2">
+    {
+      document.organizationId ? (
+        <Building2Icon class="size-4" />
+      ) : (
+        <CircleUserIcon class="size-4" />
+      )
+    }
+    {document.organizationId ? "Organization" : "Personal"}
+  </td>
+  <td class="text-muted-foreground hidden md:table-cell">
+    {format(new Date(document.createdAt), "MMM dd, yyyy")}
+  </td>
+  <td class="flex justify-end">
+    <DocumentMenu
+      documentId={document.id}
+      title={document.title}
+    />
+  </td>
+</tr>

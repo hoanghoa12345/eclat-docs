@@ -1,0 +1,57 @@
+---
+import Document from "@/components/documentId/Document.astro";
+import Layout from "@/layouts/Layout.astro";
+import { db } from "@/db/drizzle";
+import { auth } from "@/lib/auth"; 
+import {document as DocumentSchema} from '@/db/schema'
+
+const { documentId } = Astro.params;
+const template = Astro.url.searchParams.get("template") || "";
+
+const session = await auth.api.getSession({
+    headers: Astro.request.headers,
+});
+
+if (!session?.user?.id) {
+    // This page is protected, and middleware should handle the redirect.
+    // Adding a safeguard here.
+    return Astro.redirect('/login');
+}
+
+let document: typeof DocumentSchema.$inferSelect | undefined;
+
+if (documentId === 'new-document') {
+    document = {
+        id: 'new-document',
+        title: 'Untitled',
+        content: '',
+        userId: session.user.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+        organizationId: null,
+        templateId: template || null,
+    };
+} else {
+    document = await db.query.document.findFirst({
+        where: (documents, { eq, and, isNull }) =>
+            and(
+                eq(documents.id, documentId!),
+                eq(documents.userId, session.user.id), // Ensure user owns the document
+                isNull(documents.deletedAt)
+            ),
+    });
+}
+---
+
+<Layout>
+    {
+        document === undefined ? (
+            <div class="flex justify-center items-center h-24">
+                <span class="loading loading-spinner loading-xl" />
+            </div>
+        ) : (
+            <Document document={document} template={template} user={session?.user}/>
+        )
+    }
+</Layout>
