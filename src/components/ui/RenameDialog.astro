@@ -7,15 +7,53 @@
             >
         </form>
         <h3 class="text-lg font-bold">Rename document</h3>
-        <form>
+        <form class="rename_document_form">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend"
                     >Enter a new name for this document</legend
                 >
-                <input type="text" class="input w-full" placeholder="Title" />
+                <input
+                    id="input_document_id"
+                    name="document_id"
+                    type="text"
+                    class="hidden"
+                />
+                <input
+                    id="input_title"
+                    name="title"
+                    type="text"
+                    class="input w-full"
+                    placeholder="Title"
+                />
             </fieldset>
-            <button class="btn" type="reset" onclick="rename_document_modal.close()">Cancel</button>
+            <button
+                class="btn"
+                type="reset"
+                onclick="rename_document_modal.close()">Cancel</button
+            >
             <button class="btn" type="submit">Save</button>
         </form>
     </div>
 </dialog>
+<script>
+    import { actions } from "astro:actions";
+
+    const form = document.querySelector(
+        "form.rename_document_form",
+    ) as HTMLFormElement;
+    form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const { error } = await actions.updateDocumentTitle({
+            id: formData.get("document_id")?.toString() || "",
+            title: formData.get("title")?.toString() || "",
+        });
+        if (!error) {
+            (
+                document.getElementById(
+                    "rename_document_modal",
+                ) as HTMLDialogElement
+            ).close();
+        }
+    });
+</script>

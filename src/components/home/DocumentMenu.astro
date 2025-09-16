@@ -25,7 +25,7 @@ const { documentId, title } = Astro.props;
         class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
     >
         <li>
-            <a onclick="rename_document_modal.showModal()"
+            <a class="rename-button" data-docs-id={documentId} data-title={title}
                 ><svg
                     class="w-4 h-4 text-gray-800 dark:text-white"
                     aria-hidden="true"
@@ -92,3 +92,19 @@ const { documentId, title } = Astro.props;
         </li>
     </ul>
 </div>
+<script>
+    const renameModal = document.getElementById('rename_document_modal') as HTMLDialogElement
+    const inputTitle = document.getElementById('input_title') as HTMLInputElement
+    const inputDocsId = document.getElementById('input_document_id') as HTMLInputElement
+    const documentTable = document.querySelector('tbody[data-document-table]')
+
+    documentTable?.querySelectorAll('.rename-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const documentId = (event.target as HTMLElement).dataset.docsId
+            const title = (event.target as HTMLElement).dataset.title
+            inputTitle!.value = title || ''
+            inputDocsId!.value = documentId || ''
+            renameModal.showModal()
+        })
+    })
+</script>

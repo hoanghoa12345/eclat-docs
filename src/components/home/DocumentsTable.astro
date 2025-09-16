@@ -39,7 +39,7 @@ const { documents, status } = Astro.props;
             </tr>
           </tbody>
         ) : (
-          <tbody>
+          <tbody data-document-table="">
             {documents.map((document) => (
               <DocumentRow document={document} />
             ))}

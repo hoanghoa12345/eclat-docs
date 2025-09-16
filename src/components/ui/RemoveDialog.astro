@@ -5,13 +5,8 @@
             This action cannot be undone. This will permamently delete your
             document.
         </p>
-        <div class="modal-action">
-            <form method="dialog">
-                <!-- if there is a button in form, it will close the modal -->
-                <button class="btn">Cancel</button>
-            </form>
-        </div>
-        <button class="btn btn-error">Delete</button>
+        <button class="btn" type="button" onclick="remove_document_modal.close()">Cancel</button>
+        <button class="btn btn-error" type="button">Delete</button>
     </div>
 </dialog>
 <script>
