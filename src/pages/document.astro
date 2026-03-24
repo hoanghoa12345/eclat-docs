@@ -17,12 +17,11 @@ const templates = await db.query.template.findMany();
 const status = "CanLoadMore";
 const documents = await db.query.document.findMany({
   where: (documents, { and, eq, isNull }) =>
-  and(eq(documents.userId, session?.user.id!), isNull(documents.deletedAt)),
+    and(eq(documents.userId, session?.user.id!), isNull(documents.deletedAt)),
   orderBy: (documents, { desc }) => [desc(documents.updatedAt)],
   limit: 5,
   offset: 0,
 });
-
 ---
 
 <Layout>
@@ -32,7 +31,19 @@ const documents = await db.query.document.findMany({
     </div>
     <div class="mt-16">
       <TemplatesGallery templates={templates} />
-      <DocumentsTable documents={documents} status={status}/>
+      <DocumentsTable documents={documents} status={status} />
     </div>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener("document-updated", (event) => {
+    const { id, title } = event.detail;
+    const documentRow = document.querySelector(
+      `.document-row[data-id="${id}"]`
+    );
+    if (documentRow) {
+      documentRow.textContent = title;
+    }
+  });
+</script>

@@ -53,7 +53,7 @@ export default function Navbar({ user, data }: { user: User, data: Document }) {
     };
 
     const onSaveDocument = () => {
-        actions.updateDocumentContent({ id: data.id, content: JSON.stringify(editor?.getJSON()) }).then(({ data, error }) => {
+        actions.updateDocumentContent({ id: data.id, content: JSON.stringify(editor?.getJSON() || '') }).then(({ data, error }) => {
             if (data) Toastify({
                 text: "Document updated",
                 duration: 3000,

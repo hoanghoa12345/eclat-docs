@@ -1,59 +1,82 @@
 <dialog id="rename_document_modal" class="modal">
-    <div class="modal-box">
-        <form method="dialog">
-            <button
-                class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                >✕</button
-            >
-        </form>
-        <h3 class="text-lg font-bold">Rename document</h3>
-        <form class="rename_document_form">
-            <fieldset class="fieldset">
-                <legend class="fieldset-legend"
-                    >Enter a new name for this document</legend
-                >
-                <input
-                    id="input_document_id"
-                    name="document_id"
-                    type="text"
-                    class="hidden"
-                />
-                <input
-                    id="input_title"
-                    name="title"
-                    type="text"
-                    class="input w-full"
-                    placeholder="Title"
-                />
-            </fieldset>
-            <button
-                class="btn"
-                type="reset"
-                onclick="rename_document_modal.close()">Cancel</button
-            >
-            <button class="btn" type="submit">Save</button>
-        </form>
-    </div>
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+        >✕</button
+      >
+    </form>
+    <h3 class="text-lg font-bold">Rename document</h3>
+    <form class="rename_document_form">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend"
+          >Enter a new name for this document</legend
+        >
+        <input
+          id="input_document_id"
+          name="document_id"
+          type="text"
+          class="hidden"
+        />
+        <input
+          id="input_title"
+          name="title"
+          type="text"
+          class="input w-full"
+          placeholder="Title"
+        />
+      </fieldset>
+      <button class="btn" type="reset" onclick="rename_document_modal.close()"
+        >Cancel</button
+      >
+      <button class="btn" type="submit">Save</button>
+    </form>
+  </div>
 </dialog>
 <script>
-    import { actions } from "astro:actions";
+  import { actions } from "astro:actions";
+  import Toastify from "toastify-js";
 
-    const form = document.querySelector(
-        "form.rename_document_form",
-    ) as HTMLFormElement;
-    form?.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const { error } = await actions.updateDocumentTitle({
-            id: formData.get("document_id")?.toString() || "",
-            title: formData.get("title")?.toString() || "",
-        });
-        if (!error) {
-            (
-                document.getElementById(
-                    "rename_document_modal",
-                ) as HTMLDialogElement
-            ).close();
-        }
+  const form = document.querySelector(
+    "form.rename_document_form"
+  ) as HTMLFormElement;
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const { error } = await actions.updateDocumentTitle({
+      id: formData.get("document_id")?.toString() || "",
+      title: formData.get("title")?.toString() || "",
     });
+    if (error) {
+      Toastify({
+        text: "Sometimes went wrong",
+        duration: 3000,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right",
+        style: {
+          background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        },
+      }).showToast();
+    } else {
+      const event = new CustomEvent("document-updated", {
+        detail: {
+          id: formData.get("document_id")?.toString() || "",
+          title: formData.get("title")?.toString() || "",
+        },
+      });
+      document.dispatchEvent(event);
+      (
+        document.getElementById("rename_document_modal") as HTMLDialogElement
+      ).close();
+
+      Toastify({
+        text: "Document updated",
+        duration: 3000,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right",
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+      }).showToast();
+    }
+  });
 </script>

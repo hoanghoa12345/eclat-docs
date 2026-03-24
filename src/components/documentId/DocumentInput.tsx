@@ -34,15 +34,7 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
           },
         }).showToast()
       } else {
-        // Toastify({
-        //   text: "Document updated",
-        //   duration: 3000,
-        //   gravity: "bottom", // `top` or `bottom`
-        //   position: "right",
-        //   style: {
-        //     background: "linear-gradient(to right, #00b09b, #96c93d)",
-        //   },
-        // }).showToast()
+        // TODO: update title
       }
     }
     ).catch(() =>
@@ -74,6 +66,8 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
           },
         }).showToast()
       } else {
+        console.log('Data: ', data);
+        setValue(data);
         Toastify({
           text: "Document updated",
           duration: 3000,
@@ -116,7 +110,7 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
             value={value}
             onChange={onChange}
             onBlur={() => setIsEditing(false)}
-            className="absolute inset-0 text-lg text-black px-1.5 bg-transparent truncate"
+            className="absolute inset-0 text-lg px-1.5 bg-transparent truncate"
           />
         </form>
       ) : (
@@ -129,7 +123,7 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
           }}
           className="text-lg px-1.5 cursor-pointer truncate"
         >
-          {title}
+          {value}
         </span>
       )}
       {/* {showError && <BsCloudSlash className="size-4" />}
